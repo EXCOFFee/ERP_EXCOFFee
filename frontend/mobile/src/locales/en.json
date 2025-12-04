@@ -1,0 +1,123 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "noData": "No data",
+    "noResults": "No results"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot your password?",
+    "rememberMe": "Remember me",
+    "loginSuccess": "Logged in successfully",
+    "loginError": "Login error",
+    "logoutSuccess": "Logged out",
+    "invalidCredentials": "Invalid credentials",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "invalidEmail": "Invalid email"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "sales": "Sales",
+    "purchasing": "Purchasing",
+    "finance": "Finance",
+    "hr": "HR",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "inventory": {
+    "title": "Inventory",
+    "products": "Products",
+    "categories": "Categories",
+    "warehouses": "Warehouses",
+    "movements": "Movements",
+    "stock": "Stock",
+    "lowStock": "Low stock",
+    "addProduct": "Add product",
+    "scanBarcode": "Scan barcode"
+  },
+  "sales": {
+    "title": "Sales",
+    "customers": "Customers",
+    "orders": "Orders",
+    "invoices": "Invoices",
+    "quotes": "Quotes",
+    "newOrder": "New order",
+    "newQuote": "New quote"
+  },
+  "purchasing": {
+    "title": "Purchasing",
+    "suppliers": "Suppliers",
+    "orders": "Purchase orders",
+    "receipts": "Receipts",
+    "newOrder": "New order"
+  },
+  "finance": {
+    "title": "Finance",
+    "accounts": "Accounts",
+    "transactions": "Transactions",
+    "reports": "Reports",
+    "balance": "Balance"
+  },
+  "hr": {
+    "title": "Human Resources",
+    "employees": "Employees",
+    "attendance": "Attendance",
+    "payroll": "Payroll",
+    "checkIn": "Check In",
+    "checkOut": "Check Out"
+  },
+  "profile": {
+    "title": "My Profile",
+    "editProfile": "Edit profile",
+    "changePassword": "Change password",
+    "notifications": "Notifications",
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark mode"
+  },
+  "errors": {
+    "general": "An error occurred",
+    "network": "Connection error",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Access denied",
+    "notFound": "Not found",
+    "serverError": "Server error",
+    "timeout": "Request timeout"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters",
+    "passwordMatch": "Passwords do not match",
+    "numeric": "Must be a number",
+    "positive": "Must be a positive number"
+  }
+}

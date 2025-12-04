@@ -1,0 +1,44 @@
+{
+    "python.defaultInterpreterPath": "e:/Proyectos/ERP/backend/venv/Scripts/python.exe",
+    "python.pythonPath": "e:/Proyectos/ERP/backend/venv/Scripts/python.exe",
+    "python.envFile": "${workspaceFolder}/backend/.env",
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.extraPaths": [
+        "e:/Proyectos/ERP/backend",
+        "e:/Proyectos/ERP/backend/apps",
+        "e:/Proyectos/ERP/backend/venv/Lib/site-packages"
+    ],
+    "python.analysis.stubPath": "e:/Proyectos/ERP/backend/venv/Lib/site-packages",
+    "python.venvPath": "e:/Proyectos/ERP/backend",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnknownMemberType": "none",
+        "reportUnknownVariableType": "none",
+        "reportUnknownArgumentType": "none",
+        "reportUnknownParameterType": "none",
+        "reportMissingTypeStubs": "none",
+        "reportMissingImports": "warning"
+    },
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "files.associations": {
+        "*.env": "dotenv",
+        "*.env.*": "dotenv"
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
+}

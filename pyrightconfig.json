@@ -1,0 +1,26 @@
+{
+    "venvPath": "backend",
+    "venv": "venv",
+    "pythonVersion": "3.14",
+    "pythonPlatform": "Windows",
+    "extraPaths": [
+        "backend",
+        "backend/apps"
+    ],
+    "include": [
+        "backend/**/*.py"
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "**/venv",
+        "frontend"
+    ],
+    "typeCheckingMode": "off",
+    "reportMissingImports": "warning",
+    "reportMissingTypeStubs": "none",
+    "reportUnknownMemberType": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnknownArgumentType": "none",
+    "reportUnknownParameterType": "none"
+}

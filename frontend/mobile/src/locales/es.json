@@ -1,0 +1,123 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "refresh": "Actualizar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "yes": "Sí",
+    "no": "No",
+    "all": "Todos",
+    "none": "Ninguno",
+    "noData": "Sin datos",
+    "noResults": "Sin resultados"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "register": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "rememberMe": "Recordarme",
+    "loginSuccess": "Sesión iniciada correctamente",
+    "loginError": "Error al iniciar sesión",
+    "logoutSuccess": "Sesión cerrada",
+    "invalidCredentials": "Credenciales inválidas",
+    "emailRequired": "El correo es requerido",
+    "passwordRequired": "La contraseña es requerida",
+    "invalidEmail": "Correo electrónico inválido"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "inventory": "Inventario",
+    "sales": "Ventas",
+    "purchasing": "Compras",
+    "finance": "Finanzas",
+    "hr": "RRHH",
+    "settings": "Configuración",
+    "profile": "Perfil"
+  },
+  "inventory": {
+    "title": "Inventario",
+    "products": "Productos",
+    "categories": "Categorías",
+    "warehouses": "Almacenes",
+    "movements": "Movimientos",
+    "stock": "Stock",
+    "lowStock": "Stock bajo",
+    "addProduct": "Agregar producto",
+    "scanBarcode": "Escanear código"
+  },
+  "sales": {
+    "title": "Ventas",
+    "customers": "Clientes",
+    "orders": "Pedidos",
+    "invoices": "Facturas",
+    "quotes": "Cotizaciones",
+    "newOrder": "Nuevo pedido",
+    "newQuote": "Nueva cotización"
+  },
+  "purchasing": {
+    "title": "Compras",
+    "suppliers": "Proveedores",
+    "orders": "Órdenes de compra",
+    "receipts": "Recepciones",
+    "newOrder": "Nueva orden"
+  },
+  "finance": {
+    "title": "Finanzas",
+    "accounts": "Cuentas",
+    "transactions": "Transacciones",
+    "reports": "Reportes",
+    "balance": "Balance"
+  },
+  "hr": {
+    "title": "Recursos Humanos",
+    "employees": "Empleados",
+    "attendance": "Asistencia",
+    "payroll": "Nómina",
+    "checkIn": "Entrada",
+    "checkOut": "Salida"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "editProfile": "Editar perfil",
+    "changePassword": "Cambiar contraseña",
+    "notifications": "Notificaciones",
+    "language": "Idioma",
+    "theme": "Tema",
+    "darkMode": "Modo oscuro"
+  },
+  "errors": {
+    "general": "Ha ocurrido un error",
+    "network": "Error de conexión",
+    "unauthorized": "No autorizado",
+    "forbidden": "Acceso denegado",
+    "notFound": "No encontrado",
+    "serverError": "Error del servidor",
+    "timeout": "Tiempo de espera agotado"
+  },
+  "validation": {
+    "required": "Este campo es requerido",
+    "email": "Correo electrónico inválido",
+    "minLength": "Mínimo {{min}} caracteres",
+    "maxLength": "Máximo {{max}} caracteres",
+    "passwordMatch": "Las contraseñas no coinciden",
+    "numeric": "Debe ser un número",
+    "positive": "Debe ser un número positivo"
+  }
+}

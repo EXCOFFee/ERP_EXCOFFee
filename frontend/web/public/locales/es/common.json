@@ -1,0 +1,61 @@
+{
+  "app": {
+    "name": "ERP Universal",
+    "tagline": "Sistema de Gestión Empresarial"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventario",
+    "sales": "Ventas",
+    "purchasing": "Compras",
+    "finance": "Finanzas",
+    "hr": "Recursos Humanos",
+    "settings": "Configuración"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "refresh": "Actualizar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "print": "Imprimir",
+    "download": "Descargar"
+  },
+  "messages": {
+    "success": "Operación exitosa",
+    "error": "Ha ocurrido un error",
+    "loading": "Cargando...",
+    "noData": "No hay datos disponibles",
+    "confirmDelete": "¿Está seguro de eliminar este registro?",
+    "savedSuccessfully": "Guardado correctamente",
+    "deletedSuccessfully": "Eliminado correctamente"
+  },
+  "validation": {
+    "required": "Este campo es requerido",
+    "email": "Email inválido",
+    "minLength": "Mínimo {{min}} caracteres",
+    "maxLength": "Máximo {{max}} caracteres",
+    "passwordMismatch": "Las contraseñas no coinciden"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "pending": "Pendiente",
+    "approved": "Aprobado",
+    "rejected": "Rechazado",
+    "draft": "Borrador",
+    "confirmed": "Confirmado",
+    "cancelled": "Cancelado",
+    "completed": "Completado"
+  }
+}
