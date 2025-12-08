@@ -1041,3 +1041,71 @@ class BankAccount(BaseModel):
     
     def __str__(self):
         return f"{self.bank_name} - {self.name}"
+
+
+class PaymentTerm(BaseModel):
+    """
+    Términos de pago.
+    
+    Propósito:
+        Definir condiciones de pago para clientes y proveedores.
+    
+    Ejemplos:
+        - Contado
+        - 30 días neto
+        - 15/30/60 días
+    """
+    
+    code = models.CharField(
+        max_length=20,
+        unique=True,
+        verbose_name='Código'
+    )
+    
+    name = models.CharField(
+        max_length=100,
+        verbose_name='Nombre'
+    )
+    
+    description = models.TextField(
+        blank=True,
+        verbose_name='Descripción'
+    )
+    
+    # Días para el vencimiento
+    days = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Días'
+    )
+    
+    # Porcentaje de descuento por pronto pago
+    discount_percentage = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        verbose_name='Descuento Pronto Pago (%)'
+    )
+    
+    # Días para aplicar descuento
+    discount_days = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Días para Descuento'
+    )
+    
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Activo'
+    )
+    
+    class Meta:
+        db_table = 'finance_payment_terms'
+        verbose_name = 'Término de Pago'
+        verbose_name_plural = 'Términos de Pago'
+        ordering = ['days', 'name']
+    
+    def __str__(self):
+        return f"{self.name} ({self.days} días)"
+
+
+# Alias para compatibilidad - Tax apunta a TaxRate
+Tax = TaxRate

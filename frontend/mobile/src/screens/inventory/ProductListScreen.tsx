@@ -1,42 +1,59 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
-import { Text, Card, useTheme, Searchbar, FAB, Chip, IconButton } from 'react-native-paper';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, StyleSheet, FlatList, RefreshControl, Alert } from 'react-native';
+import { Text, Card, useTheme, Searchbar, FAB, Chip, IconButton, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { InventoryStackParamList } from '../../navigation/types';
+import { useAppDispatch, useAppSelector } from '../../hooks/useStore';
+import { fetchProducts, setFilters } from '../../store/slices/inventorySlice';
+import { Product } from '../../services/inventory.service';
 
 type NavigationProp = NativeStackNavigationProp<InventoryStackParamList, 'ProductList'>;
-
-interface Product {
-  id: number;
-  sku: string;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  minStock: number;
-}
-
-// Datos de ejemplo
-const mockProducts: Product[] = [
-  { id: 1, sku: 'PRD001', name: 'Laptop HP ProBook', category: 'Electrónica', price: 899.99, stock: 15, minStock: 5 },
-  { id: 2, sku: 'PRD002', name: 'Mouse Inalámbrico', category: 'Accesorios', price: 29.99, stock: 3, minStock: 10 },
-  { id: 3, sku: 'PRD003', name: 'Teclado Mecánico', category: 'Accesorios', price: 79.99, stock: 25, minStock: 8 },
-  { id: 4, sku: 'PRD004', name: 'Monitor 24"', category: 'Electrónica', price: 299.99, stock: 8, minStock: 3 },
-  { id: 5, sku: 'PRD005', name: 'Cable HDMI 2m', category: 'Cables', price: 12.99, stock: 50, minStock: 20 },
-];
 
 const ProductListScreen: React.FC = () => {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp>();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [products] = useState<Product[]>(mockProducts);
+  const dispatch = useAppDispatch();
+  
+  const { products, loading, error, pagination, filters } = useAppSelector((state) => state.inventory);
+  const { isOnline, pendingActions } = useAppSelector((state) => state.offline);
+  
+  const [searchQuery, setSearchQuery] = useState(filters.search || '');
+  const [refreshing, setRefreshing] = useState(false);
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.sku.toLowerCase().includes(searchQuery.toLowerCase())
+  const loadProducts = useCallback(() => {
+    dispatch(fetchProducts(filters));
+  }, [dispatch, filters]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadProducts();
+    }, [loadProducts])
   );
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error);
+    }
+  }, [error]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    dispatch(setFilters({ ...filters, search: query }));
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await dispatch(fetchProducts(filters));
+    setRefreshing(false);
+  };
+
+  const handleLoadMore = () => {
+    if (pagination.page < pagination.totalPages && !loading) {
+      dispatch(fetchProducts({ ...filters, page: pagination.page + 1 }));
+    }
+  };
 
   const renderProduct = ({ item }: { item: Product }) => {
     const isLowStock = item.stock <= item.minStock;
@@ -44,7 +61,7 @@ const ProductListScreen: React.FC = () => {
     return (
       <Card 
         style={styles.productCard}
-        onPress={() => navigation.navigate('ProductDetail', { id: item.id })}
+        onPress={() => navigation.navigate('ProductDetail', { id: Number(item.id) })}
       >
         <Card.Content style={styles.productContent}>
           <View style={styles.productInfo}>
@@ -78,6 +95,15 @@ const ProductListScreen: React.FC = () => {
     );
   };
 
+  const renderFooter = () => {
+    if (!loading || products.length === 0) return null;
+    return (
+      <View style={styles.footerLoader}>
+        <ActivityIndicator size="small" />
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.header}>
@@ -88,6 +114,20 @@ const ProductListScreen: React.FC = () => {
         <Text variant="titleLarge" style={{ flex: 1, fontWeight: 'bold' }}>
           Productos
         </Text>
+        {!isOnline && (
+          <Chip compact icon="cloud-off-outline" style={{ backgroundColor: '#fff3e0' }}>
+            Offline
+          </Chip>
+        )}
+        {pendingActions.length > 0 && (
+          <Chip compact icon="sync" style={{ backgroundColor: '#e3f2fd' }}>
+            {pendingActions.length}
+          </Chip>
+        )}
+        <IconButton
+          icon="barcode-scan"
+          onPress={() => navigation.navigate('BarcodeScanner')}
+        />
         <IconButton
           icon="filter-variant"
           onPress={() => {}}
@@ -97,24 +137,37 @@ const ProductListScreen: React.FC = () => {
       <Searchbar
         placeholder="Buscar por nombre o SKU..."
         value={searchQuery}
-        onChangeText={setSearchQuery}
+        onChangeText={handleSearch}
         style={styles.searchbar}
       />
 
-      <FlatList
-        data={filteredProducts}
-        renderItem={renderProduct}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.list}
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text variant="bodyLarge" style={{ color: theme.colors.onSurfaceVariant }}>
-              No se encontraron productos
-            </Text>
-          </View>
-        }
-      />
+      {loading && products.length === 0 ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" />
+          <Text style={{ marginTop: 16 }}>Cargando productos...</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={products}
+          renderItem={renderProduct}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.list}
+          ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.3}
+          ListFooterComponent={renderFooter}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text variant="bodyLarge" style={{ color: theme.colors.onSurfaceVariant }}>
+                No se encontraron productos
+              </Text>
+            </View>
+          }
+        />
+      )}
 
       <FAB
         icon="plus"
@@ -159,6 +212,15 @@ const styles = StyleSheet.create({
   stockChip: {},
   emptyContainer: {
     padding: 32,
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footerLoader: {
+    padding: 16,
     alignItems: 'center',
   },
   fab: {

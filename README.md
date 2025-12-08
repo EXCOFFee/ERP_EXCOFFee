@@ -1,306 +1,446 @@
-# 🏢 Sistema ERP Universal
+# 🏢 ERP Universal - Sistema de Planificación de Recursos Empresariales
 
-<p align="center">
-  <img src="docs/images/logo.png" alt="ERP Logo" width="200"/>
-</p>
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB)](https://reactjs.org/)
+[![Django](https://img.shields.io/badge/Django-5.x-092E20)](https://www.djangoproject.com/)
+[![React Native](https://img.shields.io/badge/React_Native-Expo_50-61DAFB)](https://expo.dev/)
 
-<p align="center">
-  <strong>Sistema de Planificación de Recursos Empresariales Completo y Modular</strong>
-</p>
+Sistema ERP integral para la gestión de **Inventario**, **Ventas**, **Compras**, **Finanzas** y **Recursos Humanos**. Incluye aplicación web y móvil con soporte offline.
 
-<p align="center">
-  <a href="#características">Características</a> •
-  <a href="#arquitectura">Arquitectura</a> •
-  <a href="#instalación">Instalación</a> •
-  <a href="#uso">Uso</a> •
-  <a href="#documentación">Documentación</a>
-</p>
+![ERP Dashboard](https://via.placeholder.com/800x400?text=ERP+Dashboard)
 
----
+## 📋 Tabla de Contenidos
 
-## 📋 Descripción
-
-Sistema ERP Universal es una solución empresarial completa desarrollada con tecnologías modernas que permite gestionar todos los aspectos operativos de una organización, desde inventario y ventas hasta recursos humanos y finanzas.
+- [Características](#-características)
+- [Stack Tecnológico](#-stack-tecnológico)
+- [Requisitos Previos](#-requisitos-previos)
+- [Instalación](#-instalación)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Módulos del Sistema](#-módulos-del-sistema)
+- [API Documentation](#-api-documentation)
+- [Aplicación Móvil](#-aplicación-móvil)
+- [Testing](#-testing)
+- [Deployment](#-deployment)
+- [Contribución](#-contribución)
+- [Licencia](#-licencia)
 
 ## ✨ Características
 
-### 🔐 Autenticación y Seguridad
-- Autenticación JWT con tokens de acceso y refresco
-- Control de acceso basado en roles (RBAC)
-- Autenticación de dos factores (2FA)
-- Auditoría completa de acciones
+### Core
+- 🔐 **Autenticación JWT** con refresh tokens
+- 👥 **RBAC** - Control de acceso basado en roles
+- 🌐 **Multi-idioma** (Español/Inglés)
+- 🌙 **Tema oscuro/claro**
+- 📱 **Responsive** - Web y Móvil
 
-### 📦 Gestión de Inventario
-- Control de múltiples almacenes
-- Gestión de productos y categorías
-- Trazabilidad por lotes y números de serie
-- Alertas de stock mínimo
-- Transferencias entre almacenes
+### Módulos de Negocio
+- 📦 **Inventario**: Gestión de productos, categorías, almacenes y movimientos de stock
+- 💰 **Ventas**: Clientes, pedidos, facturación
+- 🛒 **Compras**: Proveedores, órdenes de compra, recepción de mercancía
+- 💼 **Finanzas**: Plan de cuentas, asientos contables, bancos
+- 👔 **RRHH**: Empleados, departamentos, nómina
 
-### 💰 Gestión de Ventas
-- Catálogo de clientes
-- Cotizaciones y pedidos
-- Facturación electrónica
-- Gestión de precios y descuentos
-- Reportes de ventas
+### Características Técnicas
+- 📴 **Offline-First** (App Móvil) - Sincronización automática
+- 📊 **Dashboard** con métricas en tiempo real
+- 📷 **Escáner de códigos de barras**
+- 📄 **Generación de reportes**
+- 🔔 **Notificaciones push**
 
-### 🛒 Gestión de Compras
-- Catálogo de proveedores
-- Requisiciones y órdenes de compra
-- Recepción de mercancías
-- Evaluación de proveedores
-- Gestión de pagos
-
-### 📊 Gestión Financiera
-- Plan de cuentas contables
-- Libro diario y mayor
-- Conciliación bancaria
-- Estados financieros
-- Gestión de impuestos
-
-### 👥 Recursos Humanos
-- Gestión de empleados
-- Control de asistencia
-- Procesamiento de nómina
-- Gestión de vacaciones y permisos
-- Evaluaciones de desempeño
-
-## 🏗️ Arquitectura
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        FRONTEND                              │
-│  ┌─────────────────┐  ┌─────────────────┐                   │
-│  │   React Web     │  │  React Native   │                   │
-│  │   (Vite + MUI)  │  │    (Mobile)     │                   │
-│  └────────┬────────┘  └────────┬────────┘                   │
-└───────────┼────────────────────┼────────────────────────────┘
-            │                    │
-            ▼                    ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     API GATEWAY (Nginx)                      │
-└────────────────────────────┬────────────────────────────────┘
-                             │
-┌────────────────────────────┼────────────────────────────────┐
-│                        BACKEND                               │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │
-│  │   Core   │ │   Auth   │ │ Inventory│ │  Sales   │       │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘       │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐                     │
-│  │Purchasing│ │ Finance  │ │    HR    │                     │
-│  └──────────┘ └──────────┘ └──────────┘                     │
-└────────────────────────────┬────────────────────────────────┘
-                             │
-┌────────────────────────────┼────────────────────────────────┐
-│                      INFRAESTRUCTURA                         │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐                     │
-│  │PostgreSQL│ │  Redis   │ │ RabbitMQ │                     │
-│  └──────────┘ └──────────┘ └──────────┘                     │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## 🛠️ Tecnologías
+## 🛠 Stack Tecnológico
 
 ### Backend
-- **Python 3.11+**
-- **Django REST Framework 5.0**
-- **PostgreSQL 16** - Base de datos principal
-- **Redis 7** - Caché y sesiones
-- **Celery** - Tareas asíncronas
-- **RabbitMQ** - Message broker
+| Tecnología | Versión | Uso |
+|------------|---------|-----|
+| Python | 3.11+ | Lenguaje principal |
+| Django | 5.x | Framework web |
+| Django REST Framework | 3.14+ | API REST |
+| PostgreSQL | 16.x | Base de datos |
+| Redis | 7.x | Cache y colas |
+| Celery | 5.6+ | Tareas asíncronas |
+| RabbitMQ | 3.x | Message broker |
 
 ### Frontend Web
-- **React 18** con TypeScript
-- **Vite** - Build tool
-- **Material UI 5** - Componentes
-- **Redux Toolkit** - Estado global
-- **React Router 6** - Enrutamiento
-- **React Hook Form + Zod** - Formularios y validación
+| Tecnología | Versión | Uso |
+|------------|---------|-----|
+| React | 18.x | UI Library |
+| TypeScript | 5.x | Tipado estático |
+| Vite | 5.x | Build tool |
+| Redux Toolkit | 2.x | Estado global |
+| React Query | 5.x | Server state |
+| MUI | 6.x | Componentes UI |
+| React Hook Form | 7.x | Formularios |
 
-### Frontend Mobile
-- **React Native** con TypeScript
-- **React Navigation**
-- **React Native Paper** - Componentes
+### Frontend Móvil
+| Tecnología | Versión | Uso |
+|------------|---------|-----|
+| React Native | 0.73+ | Framework móvil |
+| Expo | 50.x | Herramientas desarrollo |
+| React Native Paper | 5.x | Componentes UI |
+| Redux Toolkit | 2.x | Estado global |
 
-### DevOps
-- **Docker & Docker Compose**
-- **Nginx** - Servidor web/proxy
-- **GitHub Actions** - CI/CD
+### Infraestructura
+| Tecnología | Uso |
+|------------|-----|
+| Docker | Containerización |
+| Docker Compose | Orquestación dev |
+| Nginx | Reverse proxy |
 
-## 📦 Instalación
+## 📋 Requisitos Previos
 
-### Prerrequisitos
+- **Docker** >= 24.0
+- **Docker Compose** >= 2.20
+- **Node.js** >= 20.x (para desarrollo móvil)
+- **pnpm** >= 8.x (opcional, para desarrollo local)
+- **Git**
 
-- Docker y Docker Compose
-- Node.js 20+ (para desarrollo local)
-- Python 3.11+ (para desarrollo local)
+## 🚀 Instalación
 
-### Instalación con Docker (Recomendada)
+### 1. Clonar el repositorio
 
-1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/tu-usuario/erp-universal.git
-cd erp-universal
+git clone https://github.com/EXCOFFee/ERP_EXCOFFee.git
+cd ERP_EXCOFFee
 ```
 
-2. **Configurar variables de entorno**
+### 2. Configurar variables de entorno
+
 ```bash
 cp .env.example .env
-# Editar .env con tus configuraciones
 ```
 
-3. **Levantar los servicios**
-```bash
-docker-compose up -d
+Edita `.env` con tus valores:
+
+```env
+# Database
+POSTGRES_DB=erp_db
+POSTGRES_USER=erp_user
+POSTGRES_PASSWORD=your_secure_password
+
+# Django
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# JWT
+JWT_SECRET_KEY=your-jwt-secret
 ```
 
-4. **Ejecutar migraciones**
-```bash
-docker-compose exec backend python manage.py migrate
-```
-
-5. **Crear superusuario**
-```bash
-docker-compose exec backend python manage.py createsuperuser
-```
-
-6. **Acceder a la aplicación**
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000/api/v1/
-- Admin: http://localhost:8000/admin/
-- RabbitMQ Management: http://localhost:15672
-
-### Instalación para Desarrollo Local
-
-#### Backend
+### 3. Iniciar con Docker
 
 ```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-.\venv\Scripts\activate   # Windows
+# Construir e iniciar todos los servicios
+docker compose up -d --build
 
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+# Ver logs
+docker compose logs -f
+
+# Solo backend
+docker compose up -d backend
+
+# Solo frontend
+docker compose up -d frontend
 ```
 
-#### Frontend
+### 4. Inicializar la base de datos
 
 ```bash
-cd frontend/web
-npm install
-npm run dev
+# Ejecutar migraciones
+docker compose exec backend python manage.py migrate
+
+# Crear superusuario
+docker compose exec backend python manage.py createsuperuser
+
+# Cargar datos iniciales (opcional)
+docker compose exec backend python manage.py loaddata initial_data
 ```
 
-## 🚀 Uso
+### 5. Acceder a la aplicación
 
-### Endpoints API
+| Servicio | URL |
+|----------|-----|
+| Frontend Web | http://localhost:3000 |
+| Backend API | http://localhost:8000/api/v1 |
+| Django Admin | http://localhost:8000/admin |
+| API Docs (Swagger) | http://localhost:8000/api/v1/docs |
+| RabbitMQ Management | http://localhost:15672 |
 
-| Módulo | Base URL |
-|--------|----------|
-| Core | `/api/v1/core/` |
-| Auth | `/api/v1/auth/` |
-| Inventario | `/api/v1/inventory/` |
-| Ventas | `/api/v1/sales/` |
-| Compras | `/api/v1/purchasing/` |
-| Finanzas | `/api/v1/finance/` |
-| RRHH | `/api/v1/hr/` |
-
-### Documentación API
-
-La documentación interactiva de la API está disponible en:
-- Swagger UI: http://localhost:8000/api/docs/
-- ReDoc: http://localhost:8000/api/redoc/
+**Credenciales por defecto:**
+- Email: `admin@erp.local`
+- Password: `admin123`
 
 ## 📁 Estructura del Proyecto
 
 ```
-erp-universal/
-├── backend/                 # Backend Django
-│   ├── config/             # Configuración del proyecto
-│   ├── apps/               # Aplicaciones Django
-│   │   ├── core/          # Funcionalidades base
-│   │   ├── authentication/# Autenticación y usuarios
-│   │   ├── inventory/     # Gestión de inventario
-│   │   ├── sales/         # Gestión de ventas
-│   │   ├── purchasing/    # Gestión de compras
-│   │   ├── finance/       # Gestión financiera
-│   │   └── hr/            # Recursos humanos
-│   ├── requirements.txt
-│   └── Dockerfile
+ERP/
+├── backend/                    # Django Backend
+│   ├── apps/
+│   │   ├── users/             # Autenticación y usuarios
+│   │   ├── inventory/         # Módulo de inventario
+│   │   ├── sales/             # Módulo de ventas
+│   │   ├── purchasing/        # Módulo de compras
+│   │   ├── finance/           # Módulo de finanzas
+│   │   └── hr/                # Módulo de RRHH
+│   ├── core/                  # Configuración Django
+│   ├── utils/                 # Utilidades compartidas
+│   └── manage.py
 ├── frontend/
-│   ├── web/               # Aplicación React
+│   ├── web/                   # React Web App
 │   │   ├── src/
-│   │   │   ├── components/
-│   │   │   ├── pages/
-│   │   │   ├── layouts/
-│   │   │   ├── store/
-│   │   │   ├── services/
-│   │   │   └── types/
-│   │   └── Dockerfile
-│   └── mobile/            # Aplicación React Native
+│   │   │   ├── components/    # Componentes reutilizables
+│   │   │   ├── pages/         # Páginas/Vistas
+│   │   │   ├── services/      # Servicios API
+│   │   │   ├── store/         # Redux store
+│   │   │   ├── hooks/         # Custom hooks
+│   │   │   └── utils/         # Utilidades
+│   │   └── package.json
+│   └── mobile/                # React Native App
+│       ├── src/
+│       │   ├── screens/       # Pantallas
+│       │   ├── components/    # Componentes
+│       │   ├── services/      # Servicios API
+│       │   ├── store/         # Redux store
+│       │   └── navigation/    # Navegación
+│       └── package.json
+├── docker/                    # Configuración Docker
+├── scripts/                   # Scripts de utilidad
 ├── docker-compose.yml
 ├── .env.example
 └── README.md
 ```
 
+## 📦 Módulos del Sistema
+
+### Inventario
+- Gestión de productos con SKU único
+- Categorías jerárquicas
+- Multi-almacén
+- Movimientos de stock (entrada, salida, transferencia)
+- Alertas de stock bajo
+- Escáner de códigos de barras
+
+### Ventas
+- Gestión de clientes
+- Órdenes de venta con workflow
+- Facturación
+- Control de crédito
+- Historial de compras por cliente
+
+### Compras
+- Gestión de proveedores
+- Órdenes de compra
+- Recepción de mercancía
+- Evaluación de proveedores
+
+### Finanzas
+- Plan de cuentas contable
+- Asientos contables
+- Cuentas bancarias
+- Conciliación bancaria
+- Reportes financieros
+
+### RRHH
+- Gestión de empleados
+- Departamentos y posiciones
+- Períodos de nómina
+- Control de asistencia
+
+## 📖 API Documentation
+
+La documentación de la API está disponible en:
+- **Swagger UI**: http://localhost:8000/api/v1/docs/
+- **ReDoc**: http://localhost:8000/api/v1/redoc/
+
+### Autenticación
+
+```bash
+# Login
+POST /api/v1/auth/token/
+Content-Type: application/json
+
+{
+  "email": "admin@erp.local",
+  "password": "admin123"
+}
+
+# Response
+{
+  "access": "eyJ...",
+  "refresh": "eyJ..."
+}
+
+# Usar token
+GET /api/v1/inventory/products/
+Authorization: Bearer eyJ...
+```
+
+### Endpoints principales
+
+```
+# Autenticación
+POST   /api/v1/auth/token/           # Login
+POST   /api/v1/auth/token/refresh/   # Refresh token
+POST   /api/v1/auth/register/        # Registro
+
+# Inventario
+GET    /api/v1/inventory/products/
+POST   /api/v1/inventory/products/
+GET    /api/v1/inventory/products/{id}/
+PATCH  /api/v1/inventory/products/{id}/
+DELETE /api/v1/inventory/products/{id}/
+
+# Ventas
+GET    /api/v1/sales/customers/
+GET    /api/v1/sales/orders/
+POST   /api/v1/sales/orders/
+POST   /api/v1/sales/orders/{id}/confirm/
+
+# Compras
+GET    /api/v1/purchasing/suppliers/
+GET    /api/v1/purchasing/purchase-orders/
+
+# Finanzas
+GET    /api/v1/finance/accounts/
+GET    /api/v1/finance/journal-entries/
+
+# RRHH
+GET    /api/v1/hr/employees/
+GET    /api/v1/hr/departments/
+```
+
+## 📱 Aplicación Móvil
+
+### Desarrollo local
+
+```bash
+cd frontend/mobile
+
+# Instalar dependencias
+pnpm install
+
+# Iniciar Expo
+pnpm start
+
+# Para Android
+pnpm android
+
+# Para iOS
+pnpm ios
+```
+
+### Características móviles
+- ✅ Autenticación con biométricos
+- ✅ Escáner de códigos de barras
+- ✅ Sincronización offline
+- ✅ Notificaciones push
+- ✅ Tema oscuro/claro
+- ✅ Soporte multi-idioma
+
+### Configuración API
+
+Edita `frontend/mobile/app.json`:
+
+```json
+{
+  "expo": {
+    "extra": {
+      "apiUrl": "http://TU_IP:8000/api/v1"
+    }
+  }
+}
+```
+
 ## 🧪 Testing
 
 ### Backend
+
 ```bash
-cd backend
-pytest
-pytest --cov=apps  # Con cobertura
+# Ejecutar tests
+docker compose exec backend pytest
+
+# Con coverage
+docker compose exec backend pytest --cov=apps
+
+# Tests específicos
+docker compose exec backend pytest apps/inventory/tests/
 ```
 
-### Frontend
+### Frontend Web
+
 ```bash
 cd frontend/web
-npm run test
-npm run test:coverage
+
+# Tests unitarios
+pnpm test
+
+# Tests E2E
+pnpm test:e2e
 ```
 
-## 🔒 Seguridad
+### Frontend Móvil
 
-- Todas las contraseñas se almacenan hasheadas con bcrypt
-- Tokens JWT con tiempo de expiración configurable
-- Validación y sanitización de entradas
-- Protección CSRF
-- Headers de seguridad configurados
-- Encriptación HTTPS en producción
+```bash
+cd frontend/mobile
 
-## 📊 Reportes
+# Tests
+pnpm test
+```
 
-El sistema incluye reportes predefinidos para:
+## 🚀 Deployment
 
-- **Ventas**: Ventas por período, por cliente, por producto
-- **Inventario**: Valoración de inventario, movimientos, stock crítico
-- **Compras**: Compras por proveedor, análisis de precios
-- **Finanzas**: Balance general, estado de resultados, flujo de caja
-- **RRHH**: Nómina, asistencia, rotación de personal
+### Producción con Docker
+
+```bash
+# Build para producción
+docker compose -f docker-compose.prod.yml up -d --build
+
+# Ver estado
+docker compose -f docker-compose.prod.yml ps
+```
+
+### Variables de entorno producción
+
+```env
+DEBUG=False
+ALLOWED_HOSTS=your-domain.com
+CORS_ALLOWED_ORIGINS=https://your-domain.com
+DATABASE_URL=postgres://user:pass@host:5432/db
+REDIS_URL=redis://host:6379/0
+```
 
 ## 🤝 Contribución
 
 1. Fork el proyecto
-2. Crear rama feature (`git checkout -b feature/nueva-caracteristica`)
-3. Commit cambios (`git commit -am 'Agregar nueva característica'`)
-4. Push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Crear Pull Request
+2. Crea una rama (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add: nueva característica'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+### Convenciones de código
+
+- **Backend**: PEP 8, Black formatter, isort
+- **Frontend**: ESLint, Prettier
+- **Commits**: [Conventional Commits](https://www.conventionalcommits.org/)
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 
-## 📞 Soporte
+## 👥 Autores
 
-Para soporte y consultas:
-- 📧 Email: soporte@erp-universal.com
-- 📖 Documentación: https://docs.erp-universal.com
-- 🐛 Issues: https://github.com/tu-usuario/erp-universal/issues
+- **EXCOFFee** - *Desarrollo inicial* - [GitHub](https://github.com/EXCOFFee)
+
+## 🙏 Agradecimientos
+
+- [Django](https://www.djangoproject.com/)
+- [React](https://reactjs.org/)
+- [Expo](https://expo.dev/)
+- [MUI](https://mui.com/)
+- [React Native Paper](https://reactnativepaper.com/)
 
 ---
 
 <p align="center">
-  Desarrollado con ❤️ para empresas modernas
+  Hecho con ❤️ por EXCOFFee
 </p>

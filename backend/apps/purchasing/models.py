@@ -965,7 +965,7 @@ class PurchaseOrderLine(BaseModel):
         verbose_name='Descuento'
     )
     tax = models.ForeignKey(
-        'finance.Tax',
+        'finance.TaxRate',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1178,7 +1178,7 @@ class GoodsReceiptLine(BaseModel):
     
     # Ubicación de destino
     location = models.ForeignKey(
-        'inventory.Location',
+        'inventory.WarehouseLocation',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1470,7 +1470,7 @@ class SupplierInvoiceLine(BaseModel):
         verbose_name='Descuento'
     )
     tax = models.ForeignKey(
-        'finance.Tax',
+        'finance.TaxRate',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

@@ -47,20 +47,36 @@ export interface Branch {
 }
 
 export interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
   rememberMe?: boolean;
 }
 
 export interface LoginResponse {
-  user: User;
-  token: string;
-  refreshToken: string;
-  expiresIn: number;
+  access: string;
+  refresh: string;
+  user: {
+    id: string;
+    email: string;
+    full_name: string;
+    role: string | null;
+    role_code: string | null;
+    is_superuser: boolean;
+  };
+}
+
+// Usuario simplificado que viene del login
+export interface LoginUser {
+  id: string;
+  email: string;
+  full_name: string;
+  role: string | null;
+  role_code: string | null;
+  is_superuser: boolean;
 }
 
 export interface AuthState {
-  user: User | null;
+  user: User | LoginUser | null;
   token: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;

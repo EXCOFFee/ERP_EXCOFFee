@@ -165,11 +165,11 @@ function Header({ onMenuClick, sidebarWidth }: HeaderProps) {
         <Box sx={{ ml: 2 }}>
           <IconButton onClick={handleProfileMenuOpen} size="small">
             <Avatar
-              src={user?.avatar}
-              alt={user?.fullName}
+              src={'avatar' in (user || {}) ? (user as any)?.avatar : undefined}
+              alt={'fullName' in (user || {}) ? (user as any)?.fullName : (user as any)?.full_name}
               sx={{ width: 36, height: 36 }}
             >
-              {user?.firstName?.[0]}
+              {('firstName' in (user || {}) ? (user as any)?.firstName?.[0] : (user as any)?.full_name?.[0]) || 'U'}
             </Avatar>
           </IconButton>
         </Box>
@@ -183,7 +183,7 @@ function Header({ onMenuClick, sidebarWidth }: HeaderProps) {
         >
           <Box sx={{ px: 2, py: 1 }}>
             <Typography variant="subtitle1" fontWeight={600}>
-              {user?.fullName}
+              {'fullName' in (user || {}) ? (user as any)?.fullName : (user as any)?.full_name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {user?.email}

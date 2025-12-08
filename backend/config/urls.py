@@ -110,15 +110,8 @@ urlpatterns = [
     # Microservicio de Compras
     # Endpoints: suppliers, purchase-orders, purchase-order-items
     path(
-        f'{API_VERSION}purchases/',
-        include('apps.purchases.urls', namespace='purchases')
-    ),
-    
-    # Microservicio de Notificaciones
-    # Endpoints: notifications, push-tokens, email-templates
-    path(
-        f'{API_VERSION}notifications/',
-        include('apps.notifications.urls', namespace='notifications')
+        f'{API_VERSION}purchasing/',
+        include('apps.purchasing.urls', namespace='purchasing')
     ),
     
     # Microservicio Core (utilidades compartidas)

@@ -296,10 +296,10 @@ class GoodsReceiptLineInline(admin.TabularInline):
     model = GoodsReceiptLine
     extra = 0
     fields = [
-        'order_line', 'product', 'quantity_received', 
+        'order_line', 'quantity_received', 
         'quantity_accepted', 'quantity_rejected', 'rejection_reason'
     ]
-    raw_id_fields = ['order_line', 'product']
+    raw_id_fields = ['order_line']
 
 
 @admin.register(GoodsReceipt)
@@ -364,8 +364,7 @@ class SupplierPaymentAllocationInline(admin.TabularInline):
     """Inline para asignaciones de pago."""
     model = SupplierPaymentAllocation
     extra = 0
-    fields = ['payment', 'amount', 'allocation_date']
-    readonly_fields = ['allocation_date']
+    fields = ['payment', 'amount']
     raw_id_fields = ['payment']
 
 
@@ -440,8 +439,7 @@ class PaymentAllocationInline(admin.TabularInline):
     """Inline para asignaciones de pago a facturas."""
     model = SupplierPaymentAllocation
     extra = 0
-    fields = ['invoice', 'amount', 'allocation_date']
-    readonly_fields = ['allocation_date']
+    fields = ['invoice', 'amount']
     raw_id_fields = ['invoice']
 
 

@@ -156,6 +156,11 @@ class SalesService {
     return data;
   }
 
+  async updateOrderStatus(id: string, status: string): Promise<Order> {
+    const { data } = await api.patch(`/sales/orders/${id}`, { status });
+    return data;
+  }
+
   async cancelOrder(id: string, reason?: string): Promise<Order> {
     const { data } = await api.post(`/sales/orders/${id}/cancel`, { reason });
     return data;

@@ -590,7 +590,7 @@ class QuotationLine(BaseModel):
         verbose_name='Descuento'
     )
     tax = models.ForeignKey(
-        'finance.Tax',
+        'finance.TaxRate',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -923,7 +923,7 @@ class SalesOrderLine(BaseModel):
         verbose_name='Descuento'
     )
     tax = models.ForeignKey(
-        'finance.Tax',
+        'finance.TaxRate',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -1215,7 +1215,7 @@ class InvoiceLine(BaseModel):
         verbose_name='Descuento'
     )
     tax = models.ForeignKey(
-        'finance.Tax',
+        'finance.TaxRate',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

@@ -2,15 +2,22 @@
 // SISTEMA ERP UNIVERSAL - Página de Dashboard
 // ========================================================
 
-import { Grid, Card, CardContent, Typography, Box, Paper } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Box, Paper, Skeleton } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
   ShoppingCart as SalesIcon,
   People as CustomersIcon,
   Inventory as InventoryIcon,
-  AccountBalance as BalanceIcon,
+  LocalShipping as ShippingIcon,
+  Receipt as InvoiceIcon,
+  Business as BusinessIcon,
 } from '@mui/icons-material';
+import { useQuery } from '@tanstack/react-query';
+import { customerService, salesOrderService, salesInvoiceService } from '../../services/sales.service';
+import { productService } from '../../services/inventory.service';
+import { employeeService } from '../../services/hr.service';
+import { supplierService, purchaseOrderService } from '../../services/purchasing.service';
 
 // Componente de tarjeta de estadísticas
 interface StatCardProps {
@@ -19,23 +26,28 @@ interface StatCardProps {
   change?: number;
   icon: React.ReactNode;
   color: string;
+  loading?: boolean;
 }
 
-function StatCard({ title, value, change, icon, color }: StatCardProps) {
+function StatCard({ title, value, change, icon, color, loading }: StatCardProps) {
   const isPositive = change && change > 0;
   
   return (
     <Card sx={{ height: '100%' }}>
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <Box>
+          <Box sx={{ flex: 1 }}>
             <Typography color="text.secondary" variant="body2" gutterBottom>
               {title}
             </Typography>
-            <Typography variant="h4" fontWeight={600}>
-              {value}
-            </Typography>
-            {change !== undefined && (
+            {loading ? (
+              <Skeleton variant="text" width={100} height={40} />
+            ) : (
+              <Typography variant="h4" fontWeight={600}>
+                {value}
+              </Typography>
+            )}
+            {change !== undefined && !loading && (
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                 {isPositive ? (
                   <TrendingUpIcon sx={{ color: 'success.main', fontSize: 20, mr: 0.5 }} />
@@ -68,35 +80,95 @@ function StatCard({ title, value, change, icon, color }: StatCardProps) {
 }
 
 function DashboardPage() {
-  // Datos de ejemplo - en producción vendrían de la API
+  // Queries para obtener datos reales
+  const { data: customersData, isLoading: customersLoading } = useQuery({
+    queryKey: ['dashboard-customers'],
+    queryFn: () => customerService.list({ page_size: 1 }),
+  });
+
+  const { data: productsData, isLoading: productsLoading } = useQuery({
+    queryKey: ['dashboard-products'],
+    queryFn: () => productService.list({ page_size: 1 }),
+  });
+
+  const { data: ordersData, isLoading: ordersLoading } = useQuery({
+    queryKey: ['dashboard-orders'],
+    queryFn: () => salesOrderService.list({ page_size: 5 }),
+  });
+
+  const { data: invoicesData, isLoading: invoicesLoading } = useQuery({
+    queryKey: ['dashboard-invoices'],
+    queryFn: () => salesInvoiceService.list({ page_size: 1 }),
+  });
+
+  const { data: suppliersData, isLoading: suppliersLoading } = useQuery({
+    queryKey: ['dashboard-suppliers'],
+    queryFn: () => supplierService.list({ page_size: 1 }),
+  });
+
+  const { data: purchaseOrdersData } = useQuery({
+    queryKey: ['dashboard-purchase-orders'],
+    queryFn: () => purchaseOrderService.list({ page_size: 5 }),
+  });
+
+  const { data: employeesData, isLoading: employeesLoading } = useQuery({
+    queryKey: ['dashboard-employees'],
+    queryFn: () => employeeService.list({ page_size: 1 }),
+  });
+
+  // Calcular totales de ventas
+  const totalSales = ordersData?.results?.reduce((acc: number, order: any) => 
+    acc + (order.total_amount || 0), 0) || 0;
+
+  const formatCurrency = (value: number) => 
+    new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value);
+
+  const formatNumber = (value: number) => 
+    new Intl.NumberFormat('es-ES').format(value);
+
+  // Estadísticas con datos reales
   const stats = [
     {
-      title: 'Ventas del Mes',
-      value: '$125,430',
-      change: 12.5,
-      icon: <SalesIcon sx={{ fontSize: 28 }} />,
-      color: '#1976d2',
-    },
-    {
-      title: 'Clientes Activos',
-      value: '1,254',
-      change: 5.2,
+      title: 'Clientes',
+      value: customersLoading ? '...' : formatNumber(customersData?.count || 0),
       icon: <CustomersIcon sx={{ fontSize: 28 }} />,
-      color: '#2e7d32',
+      color: '#1976d2',
+      loading: customersLoading,
     },
     {
-      title: 'Productos en Stock',
-      value: '3,847',
-      change: -2.1,
+      title: 'Productos',
+      value: productsLoading ? '...' : formatNumber(productsData?.count || 0),
       icon: <InventoryIcon sx={{ fontSize: 28 }} />,
-      color: '#ed6c02',
+      color: '#2e7d32',
+      loading: productsLoading,
     },
     {
-      title: 'Cuentas por Cobrar',
-      value: '$45,200',
-      change: -8.3,
-      icon: <BalanceIcon sx={{ fontSize: 28 }} />,
+      title: 'Pedidos',
+      value: ordersLoading ? '...' : formatNumber(ordersData?.count || 0),
+      icon: <SalesIcon sx={{ fontSize: 28 }} />,
+      color: '#ed6c02',
+      loading: ordersLoading,
+    },
+    {
+      title: 'Facturas',
+      value: invoicesLoading ? '...' : formatNumber(invoicesData?.count || 0),
+      icon: <InvoiceIcon sx={{ fontSize: 28 }} />,
       color: '#9c27b0',
+      loading: invoicesLoading,
+    },
+    {
+      title: 'Proveedores',
+      value: suppliersLoading ? '...' : formatNumber(suppliersData?.count || 0),
+      icon: <ShippingIcon sx={{ fontSize: 28 }} />,
+      color: '#0288d1',
+      loading: suppliersLoading,
+    },
+    {
+      title: 'Empleados',
+      value: employeesLoading ? '...' : formatNumber(employeesData?.count || 0),
+      icon: <BusinessIcon sx={{ fontSize: 28 }} />,
+      color: '#7b1fa2',
+      loading: employeesLoading,
     },
   ];
 
@@ -113,7 +185,7 @@ function DashboardPage() {
       {/* Tarjetas de estadísticas */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {stats.map((stat, index) => (
-          <Grid item xs={12} sm={6} lg={3} key={index}>
+          <Grid item xs={12} sm={6} lg={2} key={index}>
             <StatCard {...stat} />
           </Grid>
         ))}
@@ -121,111 +193,157 @@ function DashboardPage() {
 
       {/* Sección de gráficos y actividad reciente */}
       <Grid container spacing={3}>
-        {/* Gráfico de ventas */}
+        {/* Resumen de ventas */}
         <Grid item xs={12} lg={8}>
           <Paper sx={{ p: 3, height: 400 }}>
             <Typography variant="h6" fontWeight={600} gutterBottom>
-              Ventas Mensuales
+              Resumen del Sistema
             </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: 'calc(100% - 40px)',
-                color: 'text.secondary',
-              }}
-            >
-              <Typography>Gráfico de ventas (requiere datos de la API)</Typography>
+            <Grid container spacing={3} sx={{ mt: 2 }}>
+              <Grid item xs={6} md={3}>
+                <Box textAlign="center">
+                  <Typography variant="h4" fontWeight={700} color="primary.main">
+                    {customersData?.count || 0}
+                  </Typography>
+                  <Typography color="text.secondary">Clientes</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={3}>
+                <Box textAlign="center">
+                  <Typography variant="h4" fontWeight={700} color="success.main">
+                    {productsData?.count || 0}
+                  </Typography>
+                  <Typography color="text.secondary">Productos</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={3}>
+                <Box textAlign="center">
+                  <Typography variant="h4" fontWeight={700} color="warning.main">
+                    {ordersData?.count || 0}
+                  </Typography>
+                  <Typography color="text.secondary">Pedidos</Typography>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={3}>
+                <Box textAlign="center">
+                  <Typography variant="h4" fontWeight={700} color="secondary.main">
+                    {invoicesData?.count || 0}
+                  </Typography>
+                  <Typography color="text.secondary">Facturas</Typography>
+                </Box>
+              </Grid>
+            </Grid>
+            <Box sx={{ mt: 4, p: 3, bgcolor: 'background.default', borderRadius: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                Total en Pedidos Recientes
+              </Typography>
+              <Typography variant="h3" fontWeight={700} color="primary.main">
+                {formatCurrency(totalSales)}
+              </Typography>
             </Box>
           </Paper>
         </Grid>
 
         {/* Actividad reciente */}
         <Grid item xs={12} lg={4}>
-          <Paper sx={{ p: 3, height: 400 }}>
+          <Paper sx={{ p: 3, height: 400, overflow: 'auto' }}>
             <Typography variant="h6" fontWeight={600} gutterBottom>
-              Actividad Reciente
+              Pedidos Recientes
             </Typography>
             <Box sx={{ mt: 2 }}>
-              {[
-                { action: 'Nueva orden de venta', time: 'Hace 5 minutos' },
-                { action: 'Pago recibido #1234', time: 'Hace 15 minutos' },
-                { action: 'Stock actualizado', time: 'Hace 1 hora' },
-                { action: 'Cliente nuevo registrado', time: 'Hace 2 horas' },
-                { action: 'Factura emitida #567', time: 'Hace 3 horas' },
-              ].map((item, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    py: 1.5,
-                    borderBottom: index < 4 ? '1px solid' : 'none',
-                    borderColor: 'divider',
-                  }}
-                >
-                  <Typography variant="body2">{item.action}</Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {item.time}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-          </Paper>
-        </Grid>
-
-        {/* Top productos */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" fontWeight={600} gutterBottom>
-              Top Productos Vendidos
-            </Typography>
-            <Box sx={{ mt: 2 }}>
-              {[
-                { name: 'Producto A', quantity: 150, revenue: '$12,500' },
-                { name: 'Producto B', quantity: 120, revenue: '$9,800' },
-                { name: 'Producto C', quantity: 95, revenue: '$7,600' },
-                { name: 'Producto D', quantity: 80, revenue: '$6,400' },
-                { name: 'Producto E', quantity: 65, revenue: '$5,200' },
-              ].map((product, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    py: 1.5,
-                    borderBottom: index < 4 ? '1px solid' : 'none',
-                    borderColor: 'divider',
-                  }}
-                >
-                  <Box>
-                    <Typography variant="body2">{product.name}</Typography>
+              {ordersLoading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <Box key={index} sx={{ py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
+                    <Skeleton variant="text" width="80%" />
+                    <Skeleton variant="text" width="40%" />
+                  </Box>
+                ))
+              ) : ordersData?.results?.length ? (
+                ordersData.results.map((order: any, index: number) => (
+                  <Box
+                    key={order.id || index}
+                    sx={{
+                      py: 1.5,
+                      borderBottom: index < 4 ? '1px solid' : 'none',
+                      borderColor: 'divider',
+                    }}
+                  >
+                    <Box display="flex" justifyContent="space-between">
+                      <Typography variant="body2" fontWeight={500}>
+                        {order.order_number}
+                      </Typography>
+                      <Typography variant="body2" fontWeight={600} color="primary.main">
+                        {formatCurrency(order.total_amount || 0)}
+                      </Typography>
+                    </Box>
                     <Typography variant="caption" color="text.secondary">
-                      {product.quantity} unidades
+                      {order.customer_name || 'Cliente'}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" fontWeight={600}>
-                    {product.revenue}
-                  </Typography>
-                </Box>
-              ))}
+                ))
+              ) : (
+                <Typography color="text.secondary" align="center" py={4}>
+                  No hay pedidos recientes
+                </Typography>
+              )}
             </Box>
           </Paper>
         </Grid>
 
-        {/* Órdenes pendientes */}
+        {/* Órdenes de compra */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight={600} gutterBottom>
-              Órdenes Pendientes
+              Órdenes de Compra Recientes
+            </Typography>
+            <Box sx={{ mt: 2 }}>
+              {purchaseOrdersData?.results?.length ? (
+                purchaseOrdersData.results.slice(0, 5).map((order: any, index: number) => (
+                  <Box
+                    key={order.id || index}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      py: 1.5,
+                      borderBottom: index < 4 ? '1px solid' : 'none',
+                      borderColor: 'divider',
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="body2">{order.order_number}</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {order.supplier_name || 'Proveedor'} - {order.status}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2" fontWeight={600}>
+                      {formatCurrency(order.total_amount || 0)}
+                    </Typography>
+                  </Box>
+                ))
+              ) : (
+                <Typography color="text.secondary" align="center" py={4}>
+                  No hay órdenes de compra recientes
+                </Typography>
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+
+        {/* Módulos del sistema */}
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" fontWeight={600} gutterBottom>
+              Módulos del Sistema
             </Typography>
             <Box sx={{ mt: 2 }}>
               {[
-                { order: 'ORD-001', customer: 'Cliente A', status: 'Procesando', total: '$1,250' },
-                { order: 'ORD-002', customer: 'Cliente B', status: 'En espera', total: '$890' },
-                { order: 'ORD-003', customer: 'Cliente C', status: 'Procesando', total: '$2,100' },
-                { order: 'ORD-004', customer: 'Cliente D', status: 'En espera', total: '$450' },
-                { order: 'ORD-005', customer: 'Cliente E', status: 'Procesando', total: '$1,800' },
-              ].map((order, index) => (
+                { name: 'Inventario', description: 'Productos, almacenes y movimientos', color: '#2e7d32' },
+                { name: 'Ventas', description: 'Clientes, pedidos y facturas', color: '#1976d2' },
+                { name: 'Compras', description: 'Proveedores y órdenes de compra', color: '#ed6c02' },
+                { name: 'Finanzas', description: 'Contabilidad y reportes', color: '#9c27b0' },
+                { name: 'Recursos Humanos', description: 'Empleados, nómina y asistencia', color: '#0288d1' },
+              ].map((module, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -238,14 +356,21 @@ function DashboardPage() {
                   }}
                 >
                   <Box>
-                    <Typography variant="body2">{order.order}</Typography>
+                    <Typography variant="body2" fontWeight={500} sx={{ color: module.color }}>
+                      {module.name}
+                    </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {order.customer} - {order.status}
+                      {module.description}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" fontWeight={600}>
-                    {order.total}
-                  </Typography>
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      bgcolor: 'success.main',
+                    }}
+                  />
                 </Box>
               ))}
             </Box>

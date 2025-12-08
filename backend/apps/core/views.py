@@ -9,13 +9,34 @@
 # ========================================================
 
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework import status
 from django.conf import settings
 from django.db import connection
 from django.core.cache import cache
 import time
+
+
+class BaseViewSet(ModelViewSet):
+    """
+    ViewSet base para todos los módulos del ERP.
+    
+    Proporciona funcionalidad común:
+    - Autenticación requerida por defecto
+    - Logging de operaciones
+    - Manejo estándar de errores
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        """Filtra queryset base, puede ser sobrescrito en clases hijas."""
+        return super().get_queryset()
+
+
+# Alias para compatibilidad con código existente
+BaseModelViewSet = BaseViewSet
 
 
 class HealthCheckView(APIView):

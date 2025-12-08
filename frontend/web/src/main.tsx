@@ -11,8 +11,12 @@ import { SnackbarProvider } from 'notistack';
 
 import App from './App';
 import { store } from '@store/index';
+import { setStoreInstance } from '@services/api';
 import './i18n';
 import './index.css';
+
+// Configurar el store en el cliente API para evitar dependencia circular
+setStoreInstance(store);
 
 // Configuración de React Query
 const queryClient = new QueryClient({

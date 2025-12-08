@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',                   # CORS para frontend separado
     'django_filters',                # Filtrado avanzado en APIs
     'drf_spectacular',               # Documentación OpenAPI/Swagger
+    'django_celery_beat',            # Celery Beat scheduler para tareas programadas
 ]
 
 # MICROSERVICIOS ERP
@@ -87,8 +88,7 @@ ERP_MICROSERVICES = [
     'apps.sales',          # Microservicio Ventas: Órdenes, clientes, cotizaciones
     'apps.finance',        # Microservicio Finanzas: Contabilidad, facturas, reportes
     'apps.hr',             # Microservicio RRHH: Empleados, licencias, nómina
-    'apps.purchases',      # Microservicio Compras: Proveedores, órdenes de compra
-    'apps.notifications',  # Microservicio Notificaciones: Push, email, alertas
+    'apps.purchasing',     # Microservicio Compras: Proveedores, órdenes de compra
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + ERP_MICROSERVICES
@@ -411,6 +411,10 @@ SPECTACULAR_SETTINGS = {
 # ========================================================
 # Por qué: Facilitar debugging y auditoría del sistema
 
+# Asegurar que el directorio de logs existe
+LOG_DIR = BASE_DIR / 'logs'
+LOG_DIR.mkdir(exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -431,7 +435,7 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'erp.log',
+            'filename': LOG_DIR / 'erp.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'verbose',

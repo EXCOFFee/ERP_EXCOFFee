@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import authReducer, {
+import {
+  authReducer,
   login,
   logout,
   setCredentials,
@@ -76,7 +77,7 @@ describe('authSlice', () => {
         refreshToken: 'refreshToken',
       };
       const state = authReducer(initialState, updateUser({ firstName: 'Updated' }));
-      expect(state.user?.firstName).toBe('Updated');
+      expect((state.user as User)?.firstName).toBe('Updated');
     });
 
     it('should handle clearError', () => {

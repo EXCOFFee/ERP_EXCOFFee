@@ -3,7 +3,6 @@
 // ========================================================
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { authService } from '@services/auth.service';
 import type { User, LoginCredentials, AuthState } from '@/types/auth';
 
 const initialState: AuthState = {
@@ -20,17 +19,24 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
+      const { authService } = await import('@services/auth.service');
       const response = await authService.login(credentials);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('refreshToken', response.refreshToken);
-      return response;
+      // El backend devuelve 'access' y 'refresh', los mapeamos a 'token' y 'refreshToken'
+      localStorage.setItem('token', response.access);
+      localStorage.setItem('refreshToken', response.refresh);
+      return {
+        token: response.access,
+        refreshToken: response.refresh,
+        user: response.user,
+      };
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Error al iniciar sesión');
+      return rejectWithValue(error.response?.data?.detail || error.response?.data?.message || 'Error al iniciar sesión');
     }
   }
 );
 
 export const logout = createAsyncThunk('auth/logout', async () => {
+  const { authService } = await import('@services/auth.service');
   await authService.logout();
   localStorage.removeItem('token');
   localStorage.removeItem('refreshToken');
@@ -40,6 +46,7 @@ export const refreshToken = createAsyncThunk(
   'auth/refreshToken',
   async (_, { getState, rejectWithValue }) => {
     try {
+      const { authService } = await import('@services/auth.service');
       const state = getState() as { auth: AuthState };
       const response = await authService.refreshToken(state.auth.refreshToken!);
       localStorage.setItem('token', response.token);
@@ -54,6 +61,7 @@ export const getProfile = createAsyncThunk(
   'auth/getProfile',
   async (_, { rejectWithValue }) => {
     try {
+      const { authService } = await import('@services/auth.service');
       return await authService.getProfile();
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Error al obtener perfil');
@@ -80,7 +88,7 @@ const authSlice = createSlice({
     },
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
-        state.user = { ...state.user, ...action.payload };
+        state.user = { ...state.user, ...action.payload } as any;
       }
     },
   },
@@ -135,4 +143,4 @@ const authSlice = createSlice({
 });
 
 export const { setCredentials, clearError, updateUser } = authSlice.actions;
-export default authSlice.reducer;
+export const authReducer = authSlice.reducer;

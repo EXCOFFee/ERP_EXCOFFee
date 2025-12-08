@@ -18,8 +18,10 @@ export { default as BarcodeScannerScreen } from './inventory/BarcodeScannerScree
 export { default as SalesHomeScreen } from './sales/SalesHomeScreen';
 export { default as CustomerListScreen } from './sales/CustomerListScreen';
 export { default as CustomerDetailScreen } from './sales/CustomerDetailScreen';
+export { default as CustomerFormScreen } from './sales/CustomerFormScreen';
 export { default as OrderListScreen } from './sales/OrderListScreen';
 export { default as OrderDetailScreen } from './sales/OrderDetailScreen';
+export { default as OrderFormScreen } from './sales/OrderFormScreen';
 
 // Purchasing screens
 export { default as PurchasingHomeScreen } from './purchasing/PurchasingHomeScreen';

@@ -3,11 +3,16 @@
 // ========================================================
 
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { store } from '@store/index';
 
 // Configuración base
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 const API_TIMEOUT = 30000;
+
+// Función para obtener el store dinámicamente (evitar dependencia circular)
+let storeInstance: any = null;
+export const setStoreInstance = (store: any) => {
+  storeInstance = store;
+};
 
 // Crear instancia de Axios
 export const api: AxiosInstance = axios.create({
@@ -22,11 +27,13 @@ export const api: AxiosInstance = axios.create({
 // Interceptor de request: agregar token de autenticación
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const state = store.getState();
-    const token = state.auth.token;
-    
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (storeInstance) {
+      const state = storeInstance.getState();
+      const token = state.auth.token;
+      
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     
     return config;
@@ -43,11 +50,11 @@ api.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     
     // Si el error es 401 y no es un retry
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && storeInstance) {
       originalRequest._retry = true;
       
       try {
-        const state = store.getState();
+        const state = storeInstance.getState();
         const refreshToken = state.auth.refreshToken;
         
         if (refreshToken) {
@@ -59,7 +66,7 @@ api.interceptors.response.use(
           const newToken = response.data.access;
           
           // Actualizar el store
-          store.dispatch({ type: 'auth/refreshToken/fulfilled', payload: { token: newToken } });
+          storeInstance.dispatch({ type: 'auth/refreshToken/fulfilled', payload: { token: newToken } });
           
           // Reintentar la petición original
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -67,7 +74,7 @@ api.interceptors.response.use(
         }
       } catch (refreshError) {
         // Si falla el refresh, cerrar sesión
-        store.dispatch({ type: 'auth/logout/fulfilled' });
+        storeInstance.dispatch({ type: 'auth/logout/fulfilled' });
         window.location.href = '/login';
       }
     }

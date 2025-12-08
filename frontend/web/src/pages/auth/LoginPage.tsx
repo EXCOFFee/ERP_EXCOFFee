@@ -32,7 +32,7 @@ import { login, clearError } from '@store/slices/authSlice';
 
 // Esquema de validación
 const loginSchema = z.object({
-  username: z.string().min(1, 'El usuario es requerido'),
+  email: z.string().email('Email inválido').min(1, 'El email es requerido'),
   password: z.string().min(1, 'La contraseña es requerida'),
   rememberMe: z.boolean().optional(),
 });
@@ -56,7 +56,7 @@ function LoginPage() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
       rememberMe: false,
     },
@@ -91,12 +91,12 @@ function LoginPage() {
       
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField
-          {...register('username')}
-          label="Usuario o Email"
+          {...register('email')}
+          label="Email"
           fullWidth
           margin="normal"
-          error={!!errors.username}
-          helperText={errors.username?.message}
+          error={!!errors.email}
+          helperText={errors.email?.message}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

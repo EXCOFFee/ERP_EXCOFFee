@@ -154,11 +154,11 @@ class ProductAdmin(admin.ModelAdmin):
         'sale_price', 'total_stock', 'is_active', 'stock_status'
     ]
     list_filter = [
-        'is_active', 'product_type', 'category', 'brand',
+        'is_active', 'product_type', 'category',
         'track_lots', 'track_serial_numbers'
     ]
     search_fields = ['sku', 'barcode', 'name', 'description']
-    raw_id_fields = ['category', 'brand', 'default_supplier']
+    raw_id_fields = ['category', 'unit_of_measure']
     readonly_fields = ['id', 'created_at', 'updated_at']
     ordering = ['name']
     inlines = [StockInline]
@@ -168,31 +168,27 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('id', 'sku', 'barcode', 'qr_code', 'name')
         }),
         ('Clasificación', {
-            'fields': ('product_type', 'category', 'brand', 'unit_of_measure')
+            'fields': ('product_type', 'category', 'brand', 'model', 'unit_of_measure')
         }),
         ('Descripción', {
-            'fields': ('description', 'short_description', 'image'),
+            'fields': ('description', 'image'),
             'classes': ('collapse',)
         }),
         ('Precios', {
-            'fields': ('cost_price', 'sale_price', 'tax_rate')
+            'fields': ('cost_price', 'sale_price', 'min_sale_price', 'tax_rate')
         }),
         ('Control de Stock', {
             'fields': ('min_stock', 'max_stock', 'reorder_point', 'reorder_quantity')
         }),
         ('Trazabilidad', {
-            'fields': ('track_lots', 'track_serial_numbers', 'shelf_life_days')
+            'fields': ('track_lots', 'track_serial_numbers')
         }),
         ('Dimensiones y Peso', {
             'fields': ('weight', 'length', 'width', 'height'),
             'classes': ('collapse',)
         }),
-        ('Proveedor', {
-            'fields': ('default_supplier',),
-            'classes': ('collapse',)
-        }),
         ('Estado', {
-            'fields': ('is_active', 'is_purchasable', 'is_sellable', 'abc_classification')
+            'fields': ('is_active', 'is_purchasable', 'is_sellable')
         }),
         ('Auditoría', {
             'fields': ('created_at', 'updated_at'),
@@ -236,7 +232,7 @@ class StockAdmin(admin.ModelAdmin):
     """
     list_display = [
         'product', 'warehouse', 'quantity', 'reserved_quantity',
-        'available', 'location', 'last_count_date'
+        'available', 'location'
     ]
     list_filter = ['warehouse']
     search_fields = ['product__name', 'product__sku', 'location']
@@ -256,19 +252,19 @@ class LotAdmin(admin.ModelAdmin):
     """
     list_display = [
         'lot_number', 'product', 'warehouse', 'quantity', 
-        'manufacturing_date', 'expiry_date', 'status', 'days_to_expiry'
+        'production_date', 'expiration_date', 'days_to_expiry'
     ]
-    list_filter = ['status', 'warehouse', 'expiry_date']
+    list_filter = ['warehouse', 'expiration_date']
     search_fields = ['lot_number', 'product__name', 'product__sku']
     raw_id_fields = ['product', 'warehouse']
-    date_hierarchy = 'expiry_date'
-    ordering = ['expiry_date']
+    date_hierarchy = 'expiration_date'
+    ordering = ['expiration_date']
     
     def days_to_expiry(self, obj):
         """Días restantes para vencimiento."""
-        if obj.expiry_date:
+        if obj.expiration_date:
             from django.utils import timezone
-            days = (obj.expiry_date - timezone.now().date()).days
+            days = (obj.expiration_date - timezone.now().date()).days
             if days < 0:
                 return format_html(
                     '<span style="color: red; font-weight: bold;">VENCIDO ({0}d)</span>',
@@ -349,7 +345,7 @@ class StockTransferAdmin(admin.ModelAdmin):
     ]
     list_filter = ['status', 'source_warehouse', 'destination_warehouse']
     search_fields = ['transfer_number', 'notes']
-    raw_id_fields = ['source_warehouse', 'destination_warehouse', 'created_by', 'approved_by']
+    raw_id_fields = ['source_warehouse', 'destination_warehouse', 'created_by']
     date_hierarchy = 'created_at'
     ordering = ['-created_at']
     inlines = [StockTransferItemInline]
@@ -369,7 +365,7 @@ class StockTransferAdmin(admin.ModelAdmin):
             'fields': ('notes',)
         }),
         ('Auditoría', {
-            'fields': ('created_by', 'approved_by'),
+            'fields': ('created_by',),
             'classes': ('collapse',)
         }),
     )

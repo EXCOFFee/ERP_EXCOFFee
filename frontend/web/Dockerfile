@@ -1,4 +1,4 @@
-# ========================================================
+﻿# ========================================================
 # SISTEMA ERP UNIVERSAL - Dockerfile Frontend
 # ========================================================
 
@@ -7,53 +7,59 @@ FROM node:20-alpine AS development
 
 WORKDIR /app
 
+# Instalar pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Copiar archivos de dependencias
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Instalar dependencias
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
-# Copiar código fuente
+# Copiar codigo fuente
 COPY . .
 
 # Puerto de desarrollo
 EXPOSE 3000
 
 # Comando de desarrollo
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["pnpm", "run", "dev", "--", "--host", "0.0.0.0"]
 
 # ------------------------------------------------
-# Etapa de construcción
+# Etapa de construccion
 # ------------------------------------------------
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Instalar pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Copiar archivos de dependencias
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Instalar dependencias
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
-# Copiar código fuente
+# Copiar codigo fuente
 COPY . .
 
 # Variables de entorno para build
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-# Construir aplicación
-RUN npm run build
+# Construir aplicacion
+RUN pnpm run build
 
 # ------------------------------------------------
-# Etapa de producción
+# Etapa de produccion
 # ------------------------------------------------
 FROM nginx:alpine AS production
 
-# Copiar configuración de nginx
+# Copiar configuracion de nginx
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copiar archivos estáticos
+# Copiar archivos estaticos
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Puerto
