@@ -63,8 +63,15 @@ export type PurchasingStackParamList = {
 // More Stack
 export type MoreStackParamList = {
   MoreHome: undefined;
-  Finance: NavigatorScreenParams<FinanceStackParamList>;
-  HR: NavigatorScreenParams<HRStackParamList>;
+  Finance: undefined;
+  AccountForm: { accountId?: string };
+  JournalEntryList: undefined;
+  FinancialReports: undefined;
+  HR: undefined;
+  EmployeeForm: { employeeId?: string };
+  DepartmentList: undefined;
+  Attendance: undefined;
+  Payroll: undefined;
   Settings: undefined;
   Profile: undefined;
 };
@@ -73,7 +80,11 @@ export type MoreStackParamList = {
 export type FinanceStackParamList = {
   FinanceHome: undefined;
   AccountList: undefined;
-  TransactionList: undefined;
+  AccountDetail: { accountId: string };
+  AccountForm: { accountId?: string };
+  JournalEntryList: undefined;
+  JournalEntryDetail: { entryId: string };
+  JournalEntryForm: { entryId?: string };
   FinancialReports: undefined;
 };
 
@@ -81,9 +92,14 @@ export type FinanceStackParamList = {
 export type HRStackParamList = {
   HRHome: undefined;
   EmployeeList: undefined;
-  EmployeeDetail: { id: number };
+  EmployeeDetail: { employeeId: string };
+  EmployeeForm: { employeeId?: string };
+  DepartmentList: undefined;
+  DepartmentDetail: { departmentId: string };
+  DepartmentForm: { departmentId?: string };
   Attendance: undefined;
   Payroll: undefined;
+  PayslipDetail: { payslipId: string };
 };
 
 // Declaración global para React Navigation

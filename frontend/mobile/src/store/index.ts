@@ -5,6 +5,8 @@ import uiReducer from './slices/uiSlice';
 import inventoryReducer from './slices/inventorySlice';
 import salesReducer from './slices/salesSlice';
 import offlineReducer from './slices/offlineSlice';
+import financeReducer from './slices/financeSlice';
+import hrReducer from './slices/hrSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     inventory: inventoryReducer,
     sales: salesReducer,
     offline: offlineReducer,
+    finance: financeReducer,
+    hr: hrReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

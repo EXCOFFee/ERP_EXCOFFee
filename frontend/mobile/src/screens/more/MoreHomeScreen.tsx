@@ -56,7 +56,7 @@ const MoreHomeScreen: React.FC = () => {
             description="Contabilidad y reportes"
             left={props => <List.Icon {...props} icon="finance" color={theme.colors.primary} />}
             right={props => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => {}}
+            onPress={() => navigation.navigate('Finance' as never)}
           />
           <Divider />
           <List.Item
@@ -64,7 +64,7 @@ const MoreHomeScreen: React.FC = () => {
             description="Empleados y nómina"
             left={props => <List.Icon {...props} icon="account-group" color="#9c27b0" />}
             right={props => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => {}}
+            onPress={() => navigation.navigate('HR' as never)}
           />
         </Card>
 

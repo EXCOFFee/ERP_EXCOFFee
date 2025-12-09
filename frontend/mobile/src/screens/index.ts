@@ -34,5 +34,9 @@ export { default as PurchaseOrderDetailScreen } from './purchasing/PurchaseOrder
 export { default as MoreHomeScreen } from './more/MoreHomeScreen';
 export { default as ProfileScreen } from './more/ProfileScreen';
 export { default as SettingsScreen } from './more/SettingsScreen';
-export { default as FinanceHomeScreen } from './more/FinanceHomeScreen';
-export { default as HRHomeScreen } from './more/HRHomeScreen';
+
+// Finance screens
+export * from './finance';
+
+// HR screens
+export * from './hr';
