@@ -49,8 +49,8 @@ export const refreshToken = createAsyncThunk(
       const { authService } = await import('@services/auth.service');
       const state = getState() as { auth: AuthState };
       const response = await authService.refreshToken(state.auth.refreshToken!);
-      localStorage.setItem('token', response.token);
-      return response;
+      localStorage.setItem('token', response.access);
+      return { token: response.access };
     } catch (error: any) {
       return rejectWithValue('Sesión expirada');
     }

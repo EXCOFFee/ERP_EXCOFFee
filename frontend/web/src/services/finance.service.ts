@@ -297,3 +297,57 @@ export const financeReportService = {
   getCashFlow: (params?: { start_date?: string; end_date?: string }) => 
     apiGet('/finance/reports/cash-flow/', params),
 };
+
+// ========== SERVICIO UNIFICADO DE FINANZAS ==========
+export const financeService = {
+  // Cuentas contables
+  getAccounts: accountService.list,
+  getAccount: accountService.get,
+  createAccount: accountService.create,
+  updateAccount: accountService.update,
+  deleteAccount: accountService.delete,
+  getAccountTree: accountService.getTree,
+  getAccountBalance: accountService.getBalance,
+  getAccountLedger: accountService.getLedger,
+  
+  // Tipos de cuenta
+  getAccountTypes: () => accountTypeService.list(),
+  
+  // Asientos contables
+  getJournalEntries: journalEntryService.list,
+  getJournalEntry: journalEntryService.get,
+  createJournalEntry: journalEntryService.create,
+  updateJournalEntry: journalEntryService.update,
+  deleteJournalEntry: journalEntryService.delete,
+  postJournalEntry: journalEntryService.post,
+  reverseJournalEntry: journalEntryService.reverse,
+  
+  // Períodos contables
+  getFiscalPeriods: () => accountingPeriodService.list(),
+  getPeriods: accountingPeriodService.list,
+  getPeriod: accountingPeriodService.get,
+  createPeriod: accountingPeriodService.create,
+  closePeriod: accountingPeriodService.close,
+  
+  // Centros de costo
+  getCostCenters: costCenterService.list,
+  getCostCenter: costCenterService.get,
+  createCostCenter: costCenterService.create,
+  
+  // Presupuestos
+  getBudgets: budgetService.list,
+  getBudget: budgetService.get,
+  createBudget: budgetService.create,
+  
+  // Cuentas bancarias
+  getBankAccounts: bankAccountService.list,
+  getBankAccount: bankAccountService.get,
+  createBankAccount: bankAccountService.create,
+  
+  // Reportes
+  getTrialBalance: financeReportService.getTrialBalance,
+  getIncomeStatement: financeReportService.getIncomeStatement,
+  getBalanceSheet: financeReportService.getBalanceSheet,
+  getCashFlowStatement: financeReportService.getCashFlow,
+  getGeneralLedger: (params?: any) => apiGet('/finance/reports/general-ledger/', params),
+};

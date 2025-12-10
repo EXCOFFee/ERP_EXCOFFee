@@ -345,3 +345,39 @@ export const purchasingReportService = {
   getByProduct: (params?: { start_date?: string; end_date?: string }) => 
     apiGet('/purchasing/reports/by-product/', params),
 };
+
+// ========== SERVICIO UNIFICADO (para compatibilidad) ==========
+export const purchasingService = {
+  // Suppliers
+  getSuppliers: supplierService.list,
+  getSupplier: supplierService.get,
+  createSupplier: supplierService.create,
+  updateSupplier: supplierService.update,
+  deleteSupplier: supplierService.delete,
+  
+  // Purchase Orders
+  getPurchaseOrders: purchaseOrderService.list,
+  getPurchaseOrder: purchaseOrderService.get,
+  createPurchaseOrder: purchaseOrderService.create,
+  updatePurchaseOrder: purchaseOrderService.update,
+  deletePurchaseOrder: purchaseOrderService.delete,
+  
+  // Goods Receipts
+  getGoodsReceipts: goodsReceiptService.list,
+  getGoodsReceipt: goodsReceiptService.get,
+  createGoodsReceipt: goodsReceiptService.create,
+  
+  // Requisitions
+  getRequisitions: purchaseRequisitionService.list,
+  getRequisition: purchaseRequisitionService.get,
+  createRequisition: purchaseRequisitionService.create,
+  
+  // Invoices
+  getSupplierInvoices: supplierInvoiceService.list,
+  getSupplierInvoice: supplierInvoiceService.get,
+  createSupplierInvoice: supplierInvoiceService.create,
+  
+  // Payments
+  getSupplierPayments: supplierPaymentService.list,
+  createSupplierPayment: supplierPaymentService.create,
+};

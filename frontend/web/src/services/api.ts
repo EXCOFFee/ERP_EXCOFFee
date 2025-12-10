@@ -27,13 +27,21 @@ export const api: AxiosInstance = axios.create({
 // Interceptor de request: agregar token de autenticación
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // Intentar obtener el token del store primero, luego de localStorage como fallback
+    let token = null;
+    
     if (storeInstance) {
       const state = storeInstance.getState();
-      const token = state.auth.token;
-      
-      if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+      token = state.auth?.token;
+    }
+    
+    // Fallback a localStorage si el store no tiene el token
+    if (!token) {
+      token = localStorage.getItem('token');
+    }
+    
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     
     return config;
@@ -59,7 +67,7 @@ api.interceptors.response.use(
         
         if (refreshToken) {
           // Intentar refrescar el token
-          const response = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {
+          const response = await axios.post(`${API_BASE_URL}/auth/refresh/`, {
             refresh: refreshToken,
           });
           

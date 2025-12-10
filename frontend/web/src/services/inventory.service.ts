@@ -227,3 +227,69 @@ export const stockService = {
   adjustStock: (data: { product: string; warehouse: string; quantity: number; reason: string }) => 
     apiPost<Stock>('/inventory/stock/adjust/', data),
 };
+
+// ========== MOVIMIENTOS DE STOCK ==========
+export const stockMovementService = {
+  list: (params?: ListParams) => 
+    apiGet<PaginatedResponse<StockMovement>>('/inventory/stock-movements/', params),
+  
+  get: (id: string) => 
+    apiGet<StockMovement>(`/inventory/stock-movements/${id}/`),
+  
+  create: (data: Partial<StockMovement>) => 
+    apiPost<StockMovement>('/inventory/stock-movements/', data),
+};
+
+// ========== SERVICIO UNIFICADO DE INVENTARIO ==========
+export const inventoryService = {
+  // Categorías
+  getCategories: (params?: ListParams) => categoryService.list(params),
+  getCategory: categoryService.get,
+  createCategory: categoryService.create,
+  updateCategory: categoryService.update,
+  deleteCategory: categoryService.delete,
+  getCategoryTree: categoryService.getTree,
+
+  // Marcas
+  getBrands: (params?: ListParams) => brandService.list(params),
+  getBrand: brandService.get,
+  createBrand: brandService.create,
+  updateBrand: brandService.update,
+  deleteBrand: brandService.delete,
+
+  // Unidades de medida
+  getUnits: (params?: ListParams) => unitService.list(params),
+  getUnit: unitService.get,
+  createUnit: unitService.create,
+  updateUnit: unitService.update,
+  deleteUnit: unitService.delete,
+
+  // Almacenes
+  getWarehouses: (params?: ListParams) => warehouseService.list(params),
+  getWarehouse: warehouseService.get,
+  createWarehouse: warehouseService.create,
+  updateWarehouse: warehouseService.update,
+  deleteWarehouse: warehouseService.delete,
+  getWarehouseStock: warehouseService.getStock,
+
+  // Productos
+  getProducts: (params?: ListParams) => productService.list(params),
+  getProduct: productService.get,
+  getProductByCode: productService.getByCode,
+  createProduct: productService.create,
+  updateProduct: productService.update,
+  deleteProduct: productService.delete,
+  getProductStock: productService.getStock,
+  getProductMovements: productService.getMovements,
+
+  // Stock
+  getStock: stockService.list,
+  addStock: stockService.addStock,
+  removeStock: stockService.removeStock,
+  adjustStock: stockService.adjustStock,
+
+  // Movimientos de Stock
+  getStockMovements: (params?: ListParams) => stockMovementService.list(params),
+  getStockMovement: stockMovementService.get,
+  createStockMovement: stockMovementService.create,
+};

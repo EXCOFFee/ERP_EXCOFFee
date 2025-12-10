@@ -136,7 +136,11 @@ function AttendancePage() {
       field: 'hours_worked',
       headerName: 'Horas',
       width: 80,
-      valueFormatter: (value: number) => value ? `${value.toFixed(1)}h` : '-',
+      valueFormatter: (value: any) => {
+        if (value === null || value === undefined) return '-';
+        const num = typeof value === 'number' ? value : parseFloat(value);
+        return isNaN(num) ? '-' : `${num.toFixed(1)}h`;
+      },
     },
     {
       field: 'status',

@@ -111,15 +111,20 @@ function PurchaseOrderListPage() {
       field: 'subtotal',
       headerName: 'Subtotal',
       width: 110,
-      valueFormatter: (value: number) => `$${value?.toFixed(2) || '0.00'}`,
+      valueFormatter: (value: any) => {
+        const num = typeof value === 'number' ? value : parseFloat(value) || 0;
+        return `$${num.toFixed(2)}`;
+      },
     },
     {
       field: 'total',
       headerName: 'Total',
       width: 120,
-      renderCell: (params: GridRenderCellParams) => (
-        <Typography fontWeight={600}>${params.value?.toFixed(2) || '0.00'}</Typography>
-      ),
+      renderCell: (params: GridRenderCellParams) => {
+        const value = params.value;
+        const num = typeof value === 'number' ? value : parseFloat(value) || 0;
+        return <Typography fontWeight={600}>${num.toFixed(2)}</Typography>;
+      },
     },
     {
       field: 'actions',

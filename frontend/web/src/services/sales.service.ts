@@ -300,10 +300,13 @@ export const salesService = {
   createCustomer: customerService.create,
   updateCustomer: customerService.update,
   deleteCustomer: customerService.delete,
+  getCustomerGroups: () => customerGroupService.list(),
 
-  // Pedidos
+  // Pedidos (alias para compatibilidad)
+  getSalesOrders: salesOrderService.list,
   getOrders: salesOrderService.list,
   getOrder: salesOrderService.get,
+  getSalesOrder: salesOrderService.get,
   createOrder: salesOrderService.create,
   updateOrder: salesOrderService.update,
   deleteOrder: salesOrderService.delete,

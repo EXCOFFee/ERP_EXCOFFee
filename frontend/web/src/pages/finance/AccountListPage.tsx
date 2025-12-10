@@ -193,7 +193,10 @@ function AccountListPage() {
       field: 'balance',
       headerName: 'Saldo',
       width: 130,
-      valueFormatter: (value: number) => `$${value?.toFixed(2) || '0.00'}`,
+      valueFormatter: (value: any) => {
+        const num = typeof value === 'number' ? value : parseFloat(value) || 0;
+        return `$${num.toFixed(2)}`;
+      },
       align: 'right',
     },
     {

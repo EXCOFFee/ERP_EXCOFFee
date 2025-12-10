@@ -18,7 +18,7 @@ const AUTH_ENDPOINTS = {
   LOGIN: '/auth/login/',
   LOGOUT: '/auth/logout/',
   REGISTER: '/auth/register/',
-  REFRESH: '/auth/token/refresh/',
+  REFRESH: '/auth/refresh/',
   PROFILE: '/auth/profile/',
   CHANGE_PASSWORD: '/auth/change-password/',
   RESET_PASSWORD: '/auth/password-reset/',
@@ -39,7 +39,15 @@ export const authService = {
    * Cerrar sesión
    */
   async logout(): Promise<void> {
-    await api.post(AUTH_ENDPOINTS.LOGOUT);
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      try {
+        await api.post(AUTH_ENDPOINTS.LOGOUT, { refresh: refreshToken });
+      } catch (error) {
+        // Ignorar errores de logout - el token podría ya estar expirado
+        console.warn('Error durante logout:', error);
+      }
+    }
   },
 
   /**
@@ -53,8 +61,8 @@ export const authService = {
   /**
    * Refrescar token de acceso
    */
-  async refreshToken(refreshToken: string): Promise<{ token: string }> {
-    const response = await api.post<{ token: string }>(AUTH_ENDPOINTS.REFRESH, {
+  async refreshToken(refreshToken: string): Promise<{ access: string }> {
+    const response = await api.post<{ access: string }>(AUTH_ENDPOINTS.REFRESH, {
       refresh: refreshToken,
     });
     return response.data;

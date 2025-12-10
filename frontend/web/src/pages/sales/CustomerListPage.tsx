@@ -210,7 +210,10 @@ function CustomerListPage() {
       field: 'credit_limit',
       headerName: 'Límite Crédito',
       width: 120,
-      valueFormatter: (value: number) => `$${value?.toFixed(2) || '0.00'}`,
+      valueFormatter: (value: any) => {
+        const num = typeof value === 'number' ? value : parseFloat(value) || 0;
+        return `$${num.toFixed(2)}`;
+      },
     },
     {
       field: 'is_active',

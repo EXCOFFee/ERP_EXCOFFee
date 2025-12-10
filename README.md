@@ -152,8 +152,8 @@ docker compose exec backend python manage.py migrate
 # Crear superusuario
 docker compose exec backend python manage.py createsuperuser
 
-# Cargar datos iniciales (opcional)
-docker compose exec backend python manage.py loaddata initial_data
+# Cargar datos de prueba (opcional)
+docker compose exec backend python manage.py seed_data
 ```
 
 ### 5. Acceder a la aplicación

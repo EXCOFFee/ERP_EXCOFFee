@@ -384,7 +384,7 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
         'subtotal', 'discount_amount', 'tax_amount', 'total', 
         'amount_paid', 'created_at', 'updated_at', 'created_by'
     ]
-    raw_id_fields = ['supplier', 'purchase_order', 'goods_receipt']
+    raw_id_fields = ['supplier', 'purchase_order']
     
     fieldsets = (
         ('General', {
@@ -394,7 +394,7 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
             )
         }),
         ('Proveedor', {
-            'fields': ('supplier', 'purchase_order', 'goods_receipt')
+            'fields': ('supplier', 'purchase_order')
         }),
         ('Totales', {
             'fields': ('subtotal', 'discount_amount', 'tax_amount', 'total', 'amount_paid')
@@ -455,7 +455,7 @@ class SupplierPaymentAdmin(admin.ModelAdmin):
     search_fields = ['number', 'supplier__name', 'reference', 'check_number']
     date_hierarchy = 'payment_date'
     ordering = ['-payment_date']
-    readonly_fields = ['amount_allocated', 'created_at', 'updated_at', 'created_by']
+    readonly_fields = ['created_at', 'updated_at', 'created_by']
     raw_id_fields = ['supplier', 'bank_account']
     
     fieldsets = (
@@ -466,10 +466,7 @@ class SupplierPaymentAdmin(admin.ModelAdmin):
             'fields': ('payment_method', 'amount', 'currency', 'bank_account')
         }),
         ('Referencias', {
-            'fields': ('reference', 'check_number', 'transaction_id')
-        }),
-        ('Asignación', {
-            'fields': ('amount_allocated',)
+            'fields': ('reference', 'check_number')
         }),
         ('Estado', {
             'fields': ('status', 'approved_by', 'approved_date')
@@ -491,7 +488,8 @@ class SupplierPaymentAdmin(admin.ModelAdmin):
     amount_display.admin_order_field = 'amount'
     
     def allocated_display(self, obj):
-        return f'${obj.amount_allocated:,.2f}'
+        allocated = sum(a.amount for a in obj.allocations.all())
+        return f'${allocated:,.2f}'
     allocated_display.short_description = 'Asignado'
     
     def save_model(self, request, obj, form, change):
